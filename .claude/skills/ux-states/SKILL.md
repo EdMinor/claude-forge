@@ -1,24 +1,30 @@
-# Skill: UX States
-Version: 1.0 | Layer: Polish — самый игнорируемый, самый заметный
+---
+name: ux-states
+description: Polish layer — skeleton screens, empty states with character, toast system, error states, optimistic updates. Apply per screen.
+user-invocable: false
+---
 
-## Зачем этот скилл
-Шаблонный проект: спиннер в центре экрана + "No data found" + красный алерт.
-Продвинутый проект: skeleton с ритмом, пустые состояния с характером, тосты с контекстом.
-Это то, что пользователь видит постоянно. Именно здесь шаблон виден сразу.
+# Skill: UX States
+Version: 1.0 | Layer: Polish — the most ignored, the most noticeable
+
+## Why this skill
+Template project: spinner in the center of the screen + "No data found" + red alert.
+Advanced project: skeleton with rhythm, empty states with character, toasts with context.
+This is what the user sees constantly. This is where the template shows immediately.
 
 ---
 
-## Правило 1 — Никаких спиннеров на уровне страницы
+## Rule 1 — No page-level spinners
 
 ```tsx
-// ПЛОХО — шаблонный паттерн:
+// BAD — template pattern:
 if (isLoading) return <Spinner />
 
-// ХОРОШО — skeleton повторяет форму реального контента:
+// GOOD — skeleton mirrors the shape of real content:
 if (isLoading) return <DashboardSkeleton />
 ```
 
-### Skeleton компонент (базовый)
+### Skeleton component (basic)
 
 ```tsx
 // src/components/ui/Skeleton.tsx
@@ -35,17 +41,17 @@ export function Skeleton({ className }: { className?: string }) {
   )
 }
 
-// Анимация в tailwind.config:
+// Animation in tailwind.config:
 // animation: { pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }
-// Используй разные задержки для ритма:
+// Use different delays for rhythm:
 // <Skeleton className="h-4 w-3/4 animation-delay-75" />
 // <Skeleton className="h-4 w-1/2 animation-delay-150" />
 ```
 
-### Skeleton для типичных layouts
+### Skeletons for common layouts
 
 ```tsx
-// Карточка с заголовком и текстом:
+// Card with title and text:
 export function CardSkeleton() {
   return (
     <div className="rounded-lg border border-neutral-200 p-4 space-y-3">
@@ -60,7 +66,7 @@ export function CardSkeleton() {
   )
 }
 
-// Строка таблицы:
+// Table row:
 export function TableRowSkeleton() {
   return (
     <tr>
@@ -72,7 +78,7 @@ export function TableRowSkeleton() {
   )
 }
 
-// Аватар + имя:
+// Avatar + name:
 export function UserSkeleton() {
   return (
     <div className="flex items-center gap-3">
@@ -88,12 +94,12 @@ export function UserSkeleton() {
 
 ---
 
-## Правило 2 — Empty States с характером
+## Rule 2 — Empty States with character
 
-Empty state — это возможность, не ошибка. Должен:
-1. Объяснить что здесь будет
-2. Дать конкретное действие
-3. Иметь иллюстрацию или иконку (не generic)
+An empty state is an opportunity, not an error. It should:
+1. Explain what will be here
+2. Give a concrete action
+3. Have an illustration or icon (not generic)
 
 ```tsx
 // src/components/ui/EmptyState.tsx
@@ -134,51 +140,51 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
   )
 }
 
-// Использование — конкретные, не generic:
+// Usage — specific, not generic:
 <EmptyState
   icon={<SearchIcon className="w-6 h-6" />}
-  title="Ничего не найдено"
-  description="Попробуй другой запрос или сними фильтры"
-  action={{ label: 'Сбросить фильтры', onClick: clearFilters }}
+  title="Nothing found"
+  description="Try a different query or remove filters"
+  action={{ label: 'Reset filters', onClick: clearFilters }}
 />
 
-// НЕ ДЕЛАЙ ТАК:
+// DON'T DO THIS:
 // title="No data"
 // description="No items found"
 ```
 
 ---
 
-## Правило 3 — Toast система (не браузерный alert)
+## Rule 3 — Toast system (not browser alert)
 
 ```tsx
-// Используй sonner — лучшая toast библиотека
+// Use sonner — the best toast library
 // npm install sonner
 
 // src/main.tsx:
 import { Toaster } from 'sonner'
 <Toaster position="bottom-right" richColors />
 
-// Использование с контекстом — не просто "Success":
+// Usage with context — not just "Success":
 import { toast } from 'sonner'
 
-// ПЛОХО:
+// BAD:
 toast.success('Success')
 toast.error('Error')
 
-// ХОРОШО — конкретно и с действием:
-toast.success('Клиент добавлен', {
-  description: 'Иван Петров добавлен в базу',
+// GOOD — specific and with action:
+toast.success('Client added', {
+  description: 'John Smith has been added to the database',
   action: {
-    label: 'Открыть',
+    label: 'Open',
     onClick: () => navigate(`/clients/${id}`)
   }
 })
 
-toast.error('Не удалось сохранить', {
-  description: 'Проверь подключение к интернету',
+toast.error('Could not save', {
+  description: 'Check your internet connection',
   action: {
-    label: 'Повторить',
+    label: 'Retry',
     onClick: retry
   }
 })
@@ -186,7 +192,7 @@ toast.error('Не удалось сохранить', {
 
 ---
 
-## Правило 4 — Error States (не просто красный блок)
+## Rule 4 — Error States (not just a red block)
 
 ```tsx
 // src/components/ui/ErrorState.tsx
@@ -198,8 +204,8 @@ interface ErrorStateProps {
 }
 
 export function ErrorState({
-  title = 'Что-то пошло не так',
-  message = 'Попробуй обновить страницу',
+  title = 'Something went wrong',
+  message = 'Try refreshing the page',
   retry,
   variant = 'inline'
 }: ErrorStateProps) {
@@ -210,7 +216,7 @@ export function ErrorState({
         <h2 className="text-xl font-semibold">{title}</h2>
         <p className="text-sm text-neutral-500">{message}</p>
         {retry && (
-          <button onClick={retry} className="...">Попробовать снова</button>
+          <button onClick={retry} className="...">Try again</button>
         )}
       </div>
     )
@@ -230,16 +236,16 @@ export function ErrorState({
 
 ---
 
-## Правило 5 — Optimistic Updates
+## Rule 5 — Optimistic Updates
 
 ```tsx
-// Не жди ответа сервера для простых действий
-// Используй TanStack Query useMutation:
+// Don't wait for the server response for simple actions
+// Use TanStack Query useMutation:
 
 const { mutate: toggleFavorite } = useMutation({
   mutationFn: api.toggleFavorite,
   onMutate: async (id) => {
-    // Сразу обновляем UI
+    // Update UI immediately
     await queryClient.cancelQueries({ queryKey: ['listings'] })
     const prev = queryClient.getQueryData(['listings'])
     queryClient.setQueryData(['listings'], (old) =>
@@ -251,30 +257,30 @@ const { mutate: toggleFavorite } = useMutation({
     return { prev }
   },
   onError: (err, id, ctx) => {
-    // Откатываем если ошибка
+    // Rollback on error
     queryClient.setQueryData(['listings'], ctx.prev)
-    toast.error('Не удалось сохранить')
+    toast.error('Could not save')
   }
 })
 ```
 
 ---
 
-## Чеклист перед сдачей модуля
+## Checklist before module delivery
 
 ```
-[ ] Все data-fetching состояния покрыты: loading / error / empty / success
-[ ] Нет ни одного голого <Spinner /> на уровне страницы
-[ ] Каждый empty state имеет title + description + action (если уместно)
-[ ] Toast-ы конкретные, не generic ("Сохранено" → "Объект #123 сохранён")
-[ ] Error states разного уровня: page / card / inline
-[ ] Optimistic updates для toggle/like/favorite операций
+[ ] All data-fetching states covered: loading / error / empty / success
+[ ] No bare <Spinner /> at page level
+[ ] Every empty state has title + description + action (where appropriate)
+[ ] Toasts are specific, not generic ("Saved" → "Object #123 saved")
+[ ] Error states at different levels: page / card / inline
+[ ] Optimistic updates for toggle/like/favorite operations
 ```
 
 ## Known pitfalls
-- skeleton анимация `animate-pulse` на тёмном фоне — используй `dark:bg-neutral-700`
-- sonner и shadcn Toast — выбери одно, не оба
-- Optimistic update: всегда сохраняй `prev` для rollback
+- skeleton animation `animate-pulse` on dark background — use `dark:bg-neutral-700`
+- sonner and shadcn Toast — pick one, not both
+- Optimistic update: always save `prev` for rollback
 
 ## Evolution log
-- v1.0: базовый шаблон из bootstrap
+- v1.0: initial template from bootstrap

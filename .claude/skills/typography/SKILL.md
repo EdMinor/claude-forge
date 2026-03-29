@@ -1,39 +1,45 @@
-# Skill: Typography
-Version: 1.0 | Layer: Identity — второе что видит глаз после цвета
+---
+name: typography
+description: Identity layer — font pairing, text hierarchy, typographic details. Read after design-tokens, before first component.
+user-invocable: false
+---
 
-## Зачем этот скилл
-Inter на 16px — это невидимость. Типографика создаёт личность,
-иерархию и читаемость. Правильная пара шрифтов делает проект
-"дорогим" без единого изменения в компонентах.
+# Skill: Typography
+Version: 1.0 | Layer: Identity — the second thing the eye sees after color
+
+## Why this skill
+Inter at 16px is invisibility. Typography creates personality,
+hierarchy, and readability. The right font pair makes a project
+look "premium" without changing a single component.
 
 ---
 
-## Шаг 1 — Font Pairing
+## Step 1 — Font Pairing
 
-Выбери ОДНУ пару и держись её. Стратегии:
+Choose ONE pair and stick with it. Strategies:
 
-### Вариант A: Contrast Pair (контраст характеров)
-Display serif + Clean sans — классика editorial
+### Option A: Contrast Pair (contrasting characters)
+Display serif + Clean sans — classic editorial
 ```
 Display: Fraunces, Playfair Display, DM Serif Display
 Body:    DM Sans, Outfit, Plus Jakarta Sans
 ```
 
-### Вариант B: Family Pair (одно семейство)
-Согласованность, modern SaaS feel
+### Option B: Family Pair (same family)
+Consistency, modern SaaS feel
 ```
 Display: Geist (bold/black weights)
 Body:    Geist (regular/medium)
 Mono:    Geist Mono
 ```
 
-### Вариант C: Geometric Pair (чёткость + уют)
+### Option C: Geometric Pair (clarity + warmth)
 ```
 Display: Space Grotesk / Syne
-Body:    Inter (ТОЛЬКО если Display выразительный)
+Body:    Inter (ONLY if Display is expressive)
 ```
 
-### Подключение через fontsource (рекомендую вместо Google Fonts)
+### Installation via fontsource (recommended over Google Fonts)
 ```bash
 npm install @fontsource-variable/plus-jakarta-sans
 npm install @fontsource-variable/dm-sans
@@ -50,13 +56,13 @@ import '@fontsource/jetbrains-mono/500.css'
 
 ---
 
-## Шаг 2 — Hierarchy (не просто размер)
+## Step 2 — Hierarchy (not just size)
 
 ```
-НЕ ТАК (только размер):
+DON'T (size only):
 h1 = 32px, h2 = 24px, h3 = 18px, body = 16px
 
-ТАК (размер + вес + трекинг + цвет):
+DO (size + weight + tracking + color):
 h1 = 36px, weight 700, tracking -0.025em, color neutral-900
 h2 = 24px, weight 600, tracking -0.015em, color neutral-800
 h3 = 18px, weight 600, tracking 0,        color neutral-800
@@ -65,7 +71,7 @@ body = 15px, weight 400, leading 1.6,     color neutral-700
 small = 13px, weight 400, leading 1.5,    color neutral-500
 ```
 
-### Tailwind классы для системы:
+### Tailwind classes for the system:
 ```tsx
 // src/components/ui/typography.tsx
 export const typographyVariants = {
@@ -82,26 +88,26 @@ export const typographyVariants = {
 
 ---
 
-## Шаг 3 — Детали которые делают разницу
+## Step 3 — Details that make the difference
 
-### Числа: tabular lining (выравниваются в колонках)
+### Numbers: tabular lining (align in columns)
 ```css
 .tabular { font-variant-numeric: tabular-nums; }
-/* Для таблиц, цен, статистики — всегда! */
+/* For tables, prices, statistics — always! */
 ```
 
-### Заголовки: оптический kerning
+### Headings: optical kerning
 ```css
 h1, h2 { text-rendering: optimizeLegibility; }
 ```
 
-### Длинный текст: ограничь ширину
+### Long text: limit width
 ```css
-/* Читаемость ухудшается > 70 символов в строке */
+/* Readability degrades beyond ~70 characters per line */
 .prose { max-width: 65ch; }
 ```
 
-### Ссылки: не подчёркивание по умолчанию
+### Links: no default underline
 ```css
 a {
   text-decoration: none;
@@ -112,21 +118,21 @@ a {
 a:hover { border-bottom-color: var(--color-primary-600); }
 ```
 
-### Uppercase labels — только маленькие, с трекингом
+### Uppercase labels — only small, with tracking
 ```tsx
-// Правильно: маленький размер + tracking-wide = читаемо
+// Correct: small size + tracking-wide = readable
 <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
-  Статус клиента
+  Client Status
 </span>
 
-// Неправильно: большой uppercase без трекинга — кричит
+// Wrong: large uppercase without tracking — screams
 ```
 
 ---
 
-## Шаг 4 — Паттерны для типичных ситуаций
+## Step 4 — Patterns for common situations
 
-### Page Header (с подзаголовком)
+### Page Header (with subtitle)
 ```tsx
 <div className="mb-8">
   <h1 className="font-display text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
@@ -150,7 +156,7 @@ a:hover { border-bottom-color: var(--color-primary-600); }
 </div>
 ```
 
-### Статистика (большое число + лейбл)
+### Statistic (large number + label)
 ```tsx
 <div>
   <p className="text-3xl font-bold tabular-nums tracking-tight text-neutral-900">
@@ -164,32 +170,32 @@ a:hover { border-bottom-color: var(--color-primary-600); }
 
 ### Badge / Tag
 ```tsx
-// НЕ: <span className="badge">Active</span>
-// ДА: контекстный цвет + маленький текст + pill
+// DON'T: <span className="badge">Active</span>
+// DO: contextual color + small text + pill
 <span className="inline-flex items-center rounded-full px-2.5 py-0.5
                  bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400
                  text-xs font-medium">
-  Активен
+  Active
 </span>
 ```
 
 ---
 
-## Чеклист
+## Checklist
 
 ```
-[ ] Два шрифта подключены и применены
-[ ] h4 / labels используют uppercase + tracking, не просто bold
-[ ] Таблицы с числами используют tabular-nums
-[ ] prose контент ограничен max-width: 65ch
-[ ] Dark mode для всех типографических цветов
-[ ] Нет raw color: #333 или color: black в стилях
+[ ] Two fonts connected and applied
+[ ] h4 / labels use uppercase + tracking, not just bold
+[ ] Tables with numbers use tabular-nums
+[ ] Prose content limited to max-width: 65ch
+[ ] Dark mode for all typographic colors
+[ ] No raw color: #333 or color: black in styles
 ```
 
 ## Known pitfalls
-- Variable fonts (Plus Jakarta Sans Variable) не работают как weight 700 в старых Safari
-- `tracking-tight` на маленьких размерах (< 14px) ухудшает читаемость
-- `font-display: swap` — добавляй всегда чтобы не было FOUT
+- Variable fonts (Plus Jakarta Sans Variable) don't work as weight 700 in older Safari
+- `tracking-tight` on small sizes (< 14px) hurts readability
+- `font-display: swap` — always add it to prevent FOUT
 
 ## Evolution log
-- v1.0: базовый шаблон из bootstrap
+- v1.0: initial template from bootstrap

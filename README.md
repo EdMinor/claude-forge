@@ -2,225 +2,225 @@
 
 **From idea to project infrastructure — in one command.**
 
-claude-forge — это стартовый набор для работы с Claude Code.
-Бросаешь файлы в пустой проект, говоришь `bootstrap` — и получаешь
-полноценную инфраструктуру: агентов, скиллы, документацию, структуру.
+claude-forge is a starter kit for working with Claude Code.
+Drop the files into an empty project, say `bootstrap` — and get
+a complete infrastructure: agents, skills, documentation, structure.
 
-Есть ТЗ — Claude читает и разворачивает проект под него.
-Нет ТЗ — Discovery Agent выслушивает идею, делает ресёрч,
-задаёт правильные вопросы и составляет ТЗ сам.
+Have a spec? Claude reads it and scaffolds the project accordingly.
+No spec? The Discovery Agent listens to your idea, does research,
+asks the right questions, and creates the spec for you.
 
 ---
 
-## Что внутри
+## What's Inside
 
 ```
 claude-forge/
-├── BOOTSTRAP-v2.md          ← точка входа, главный протокол
+├── BOOTSTRAP-v2.md          ← entry point, main protocol
 └── .claude/
     └── skills/
-        ├── idea-discovery.md    ← Discovery Agent (нет ТЗ → создаёт ТЗ)
-        ├── TZ-template.md       ← формат ТЗ: MVP + фазы + roadmap
-        ├── frontend-design.md   ← aesthetic direction, анти-шаблон
-        ├── design-tokens.md     ← палитра, шрифты, spacing
-        ├── typography.md        ← иерархия, font pairing, детали
+        ├── idea-discovery.md    ← Discovery Agent (no spec → creates spec)
+        ├── TZ-template.md       ← spec format: MVP + phases + roadmap
+        ├── frontend-design.md   ← aesthetic direction, anti-template
+        ├── design-tokens.md     ← palette, fonts, spacing
+        ├── typography.md        ← hierarchy, font pairing, details
         ├── layout-craft.md      ← composition, hierarchy, breathing room
-        ├── motion.md            ← framer-motion паттерны, micro-interactions
+        ├── motion.md            ← framer-motion patterns, micro-interactions
         └── ux-states.md         ← loading / empty / error states
 ```
 
 ---
 
-## Быстрый старт
+## Quick Start
 
-### 1. Клонируй в пустой проект
+### 1. Clone into an empty project
 
 ```bash
-# Вариант A — если проект уже создан:
+# Option A — if the project already exists:
 cd my-project
 git clone https://github.com/EdMinor/claude-forge .claude-forge-tmp
 cp .claude-forge-tmp/BOOTSTRAP-v2.md .
 cp -r .claude-forge-tmp/.claude .
 rm -rf .claude-forge-tmp
 
-# Вариант B — использовать как шаблон через GitHub
-# Нажми "Use this template" → Create new repository
+# Option B — use as a GitHub template
+# Click "Use this template" → Create new repository
 ```
 
-### 2. Опционально: добавь ТЗ
+### 2. Optionally: add a spec
 
-Если у тебя уже есть техзадание — создай `TZ.md` в корне проекта.
-Нет ТЗ — не нужен, Discovery Agent поможет его составить.
+If you already have a technical specification — create `TZ.md` in the project root.
+No spec? Not needed — the Discovery Agent will help you create one.
 
-### 3. Запусти Claude Code
+### 3. Launch Claude Code
 
 ```bash
 claude
 ```
 
-### 4. Одна команда
+### 4. One command
 
 ```
 bootstrap
 ```
 
-Всё. Claude читает `BOOTSTRAP-v2.md`, смотрит есть ли `TZ.md`,
-и идёт по нужному пути.
+That's it. Claude reads `BOOTSTRAP-v2.md`, checks for `TZ.md`,
+and follows the appropriate path.
 
 ---
 
-## Два пути
+## Two Paths
 
-### Path A — есть TZ.md
+### Path A — TZ.md exists
 ```
-bootstrap → читает TZ → определяет стек и модули
-         → создаёт .claude/CLAUDE.md
-         → генерирует скиллы под проект
-         → создаёт агентов (оркестратор + по модулю)
-         → разворачивает документацию
-         → инициализирует src/ структуру
-         → готово
+bootstrap → reads TZ → determines stack and modules
+         → creates .claude/CLAUDE.md
+         → generates project-specific skills
+         → creates agents (orchestrator + per module)
+         → sets up documentation
+         → initializes src/ structure
+         → done
 ```
 
-### Path B — нет TZ.md
+### Path B — no TZ.md
 ```
-bootstrap → запускает Discovery Agent
-         → выслушивает идею (свободная форма)
-         → делает ресёрч ниши и конкурентов
-         → задаёт вопросы блоками с вариантами выбора
-         → заполняет пробелы логикой предметной области
-         → показывает summary → получает подтверждение
-         → генерирует TZ.md (MVP + 3 фазы + roadmap + стек)
+bootstrap → launches Discovery Agent
+         → listens to the idea (free form)
+         → researches the niche and competitors
+         → asks questions in blocks with choice options
+         → fills gaps with domain expertise
+         → shows summary → gets confirmation
+         → generates TZ.md (MVP + 3 phases + roadmap + stack)
          → → Path A
 ```
 
 ---
 
-## Что генерируется автоматически
+## What Gets Auto-Generated
 
-После `bootstrap` в проекте появляется:
+After `bootstrap`, the project gets:
 
-**Агентная инфраструктура**
+**Agent Infrastructure**
 ```
 .claude/
-├── CLAUDE.md                    ← инструкции для всех агентов
-├── skills/                      ← скиллы под конкретный проект
+├── CLAUDE.md                    ← instructions for all agents
+├── skills/                      ← project-specific skills
 └── agents/
-    ├── orchestrator.md          ← мастер-агент
-    ├── [module]-agent.md        ← по одному на каждый модуль
+    ├── orchestrator.md          ← master agent
+    ├── [module]-agent.md        ← one per module
     └── qa-agent.md
 ```
 
-**Живая документация**
+**Living Documentation**
 ```
 .claude/docs/
-├── context/current-context.md  ← память между сессиями
+├── context/current-context.md  ← cross-session memory
 ├── daily/                      ← daily logs
 ├── decisions/                  ← ADR (Architecture Decision Records)
-├── errors/solved/              ← энциклопедия решённых ошибок
+├── errors/solved/              ← solved error encyclopedia
 ├── weekly/                     ← weekly reports
-└── milestones/                 ← этапы проекта
+└── milestones/                 ← project milestones
 ```
 
-**Структура проекта**
+**Project Structure**
 ```
 src/
-├── features/      ← по папке на каждый модуль из ТЗ
-├── components/ui/ ← shadcn + базовые компоненты
+├── features/      ← one folder per TZ module
+├── components/ui/ ← shadcn + base components
 ├── design-system/ ← tokens.ts + theme.css
-├── api/           ← API клиент и эндпоинты
+├── api/           ← API client and endpoints
 └── ...
 ```
 
 ---
 
-## Дизайн-скиллы — порядок применения
+## Design Skills — Application Order
 
-Один из главных принципов claude-forge — проект не должен выглядеть
-как шаблон из коробки. Скиллы применяются в определённом порядке:
+One of the core principles of claude-forge — a project should never look
+like an out-of-the-box template. Skills are applied in a specific order:
 
 ```
-До первого компонента:
-  1. design-tokens.md    → своя палитра, не дефолтный синий
-  2. typography.md       → font pairing, иерархия
+Before first component:
+  1. design-tokens.md    → custom palette, not default blue
+  2. typography.md       → font pairing, hierarchy
   3. frontend-design.md  → aesthetic direction
 
-При каждом экране:
+Per screen:
   4. layout-craft.md     → composition, hierarchy, breathing room
-  5. ux-states.md        → loading / empty / error (не спиннер!)
+  5. ux-states.md        → loading / empty / error (not a spinner!)
 
-После базовой структуры:
+After base structure:
   6. motion.md           → page transitions, micro-interactions
 ```
 
 ---
 
-## Формат ТЗ
+## Spec Format
 
-`TZ-template.md` содержит структуру которую генерирует Discovery Agent:
+`TZ-template.md` contains the structure that the Discovery Agent generates:
 
-- **Vision** — суть, проблема, решение, UVP
-- **Аудитория** — персоны, кто НЕ аудитория
-- **Рыночный контекст** — конкуренты, позиционирование
-- **Монетизация** — модель, ценообразование, метрики
-- **Фаза 0 — MVP** — минимум для проверки гипотезы
-- **Фаза 1 — Core Product** — продукт которым хочется пользоваться
-- **Фаза 2 — Growth** — retention, монетизация, virality
-- **Фаза 3 — Full Release** — масштабирование, enterprise
-- **Roadmap** — после релиза, долгосрочное видение
-- **Стек** — с обоснованием каждого выбора
-- **Аналитика** — что трекаем с первого дня
-
----
-
-## Документация проекта (живая система)
-
-claude-forge запускает систему документации которая живёт вместе с проектом:
-
-| Документ | Когда создаётся |
-|----------|----------------|
-| `current-context.md` | Обновляется каждую сессию — память между чатами |
-| `daily/YYYY-MM-DD.md` | Каждая рабочая сессия |
-| `decisions/ADR-NNN.md` | При архитектурном решении |
-| `errors/solved/ERR-NNN.md` | После решения нетривиального бага |
-| `weekly/week-XX.md` | Раз в неделю |
-| `milestones/M-N.md` | При закрытии этапа |
+- **Vision** — essence, problem, solution, UVP
+- **Audience** — personas, who is NOT the audience
+- **Market Context** — competitors, positioning
+- **Monetization** — model, pricing, metrics
+- **Phase 0 — MVP** — minimum to test the hypothesis
+- **Phase 1 — Core Product** — a product worth using daily
+- **Phase 2 — Growth** — retention, monetization, virality
+- **Phase 3 — Full Release** — scaling, enterprise
+- **Roadmap** — post-release, long-term vision
+- **Stack** — with rationale for every choice
+- **Analytics** — what to track from day one
 
 ---
 
-## Эволюция скиллов
+## Project Documentation (Living System)
 
-Скиллы не статичные — они обновляются по мере роста проекта.
-После каждого завершённого модуля агент обновляет релевантные скиллы:
-добавляет найденные паттерны, фиксирует антипаттерны, повышает версию.
+claude-forge launches a documentation system that lives alongside the project:
+
+| Document | When Created |
+|----------|-------------|
+| `current-context.md` | Updated every session — cross-chat memory |
+| `daily/YYYY-MM-DD.md` | Every work session |
+| `decisions/ADR-NNN.md` | On architectural decisions |
+| `errors/solved/ERR-NNN.md` | After solving a non-trivial bug |
+| `weekly/week-XX.md` | Once a week |
+| `milestones/M-N.md` | When a milestone is closed |
+
+---
+
+## Skill Evolution
+
+Skills are not static — they get updated as the project grows.
+After every completed module, the agent updates relevant skills:
+adds discovered patterns, documents anti-patterns, bumps the version.
 
 ```markdown
 ## Evolution log
-- v1.0: начальная версия из bootstrap
-- v1.2: добавлены паттерны после Dashboard модуля
-- v1.3: зафиксированы pitfalls из UserProfile
+- v1.0: initial version from bootstrap
+- v1.2: added patterns after Dashboard module
+- v1.3: documented pitfalls from UserProfile
 ```
 
 ---
 
-## Совместимость
+## Compatibility
 
-- **Claude Code** — основная среда, всё заточено под неё
-- **Claude Sonnet 4+** — рекомендуемая модель
-- **Любой фронтенд стек** — скиллы адаптируются под проект
-- **Fullstack проекты** — поддерживается, агенты делятся по модулям
+- **Claude Code** — primary environment, everything is built for it
+- **Claude Sonnet 4+** — recommended model
+- **Any frontend stack** — skills adapt to the project
+- **Fullstack projects** — supported, agents split by module
 
 ---
 
-## Автор
+## Author
 
-Создан [Eduard Minor](https://github.com/EdMinor) в коллаборации с Claude.
+Created by [Eduard Minor](https://github.com/EdMinor) in collaboration with Claude.
 
 *"Coding is both art and logic — sometimes messy like a painter's studio,
 but always driven by curiosity and inspiration."*
 
 ---
 
-## Лицензия
+## License
 
-MIT — используй, форкай, улучшай.
+MIT — use, fork, improve.

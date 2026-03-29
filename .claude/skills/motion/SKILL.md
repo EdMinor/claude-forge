@@ -1,19 +1,25 @@
+---
+name: motion
+description: Feel layer — Framer Motion patterns for page transitions, list stagger, hover/tap states, modals, and number animations. Apply after base structure.
+user-invocable: false
+---
+
 # Skill: Motion & Micro-interactions
-Version: 1.0 | Layer: Feel — делает интерфейс живым
+Version: 1.0 | Layer: Feel — makes the interface alive
 
-## Зачем этот скилл
-Статичный интерфейс — это PDF. Движение передаёт смысл:
-появление = "вот новое", уход = "ушло", пружина = "отклик".
-Цель — не украшение, а коммуникация через физику.
+## Why this skill
+A static interface is a PDF. Motion conveys meaning:
+appearing = "here's something new", leaving = "it's gone", spring = "response".
+The goal is not decoration, but communication through physics.
 
-## Библиотека
+## Library
 ```bash
 npm install framer-motion
 ```
 
 ---
 
-## Паттерн 1 — Page Transitions (между роутами)
+## Pattern 1 — Page Transitions (between routes)
 
 ```tsx
 // src/components/layout/PageTransition.tsx
@@ -45,7 +51,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   )
 }
 
-// В роутере — обёртка AnimatePresence:
+// In the router — wrap with AnimatePresence:
 import { AnimatePresence } from 'framer-motion'
 import { useLocation } from 'react-router-dom'
 
@@ -54,7 +60,7 @@ export function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {/* маршруты */}
+        {/* routes */}
       </Routes>
     </AnimatePresence>
   )
@@ -63,10 +69,10 @@ export function AnimatedRoutes() {
 
 ---
 
-## Паттерн 2 — List Animations (stagger)
+## Pattern 2 — List Animations (stagger)
 
 ```tsx
-// Элементы списка появляются с задержкой — создаёт ощущение "живости"
+// List items appear with a delay — creates a sense of "liveliness"
 import { motion } from 'framer-motion'
 
 const containerVariants = {
@@ -74,7 +80,7 @@ const containerVariants = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.06,  // задержка между элементами
+      staggerChildren: 0.06,  // delay between items
     },
   },
 }
@@ -103,29 +109,29 @@ export function AnimatedList({ items }: { items: any[] }) {
 
 ---
 
-## Паттерн 3 — Hover & Tap States
+## Pattern 3 — Hover & Tap States
 
 ```tsx
-// Карточки с физическим откликом:
+// Cards with physical feedback:
 <motion.div
   whileHover={{ y: -2, scale: 1.01 }}
   whileTap={{ scale: 0.98 }}
   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
   className="cursor-pointer rounded-lg border..."
 >
-  {/* контент */}
+  {/* content */}
 </motion.div>
 
-// Кнопки — spring bounce при нажатии:
+// Buttons — spring bounce on press:
 <motion.button
   whileHover={{ scale: 1.02 }}
   whileTap={{ scale: 0.95 }}
   transition={{ type: 'spring', stiffness: 500, damping: 30 }}
 >
-  Сохранить
+  Save
 </motion.button>
 
-// Иконки — rotate при hover:
+// Icons — rotate on hover:
 <motion.div whileHover={{ rotate: 15 }} transition={{ type: 'spring' }}>
   <SettingsIcon />
 </motion.div>
@@ -133,10 +139,10 @@ export function AnimatedList({ items }: { items: any[] }) {
 
 ---
 
-## Паттерн 4 — Modal & Sheet Animations
+## Pattern 4 — Modal & Sheet Animations
 
 ```tsx
-// Модальное окно — fade + scale:
+// Modal — fade + scale:
 const modalVariants = {
   hidden:  { opacity: 0, scale: 0.95, y: 10 },
   visible: { opacity: 1, scale: 1,    y: 0 },
@@ -150,7 +156,7 @@ const overlayVariants = {
   exit:    { opacity: 0 },
 }
 
-// Sheet снизу — slide up:
+// Bottom sheet — slide up:
 const sheetVariants = {
   hidden:  { y: '100%' },
   visible: { y: 0, transition: { type: 'spring', stiffness: 400, damping: 40 } },
@@ -160,10 +166,10 @@ const sheetVariants = {
 
 ---
 
-## Паттерн 5 — Number/Counter Animations
+## Pattern 5 — Number/Counter Animations
 
 ```tsx
-// Анимированные числа в дашборде:
+// Animated numbers in dashboard:
 import { useMotionValue, useSpring, useTransform, animate } from 'framer-motion'
 import { useEffect } from 'react'
 
@@ -179,17 +185,17 @@ function AnimatedNumber({ value }: { value: number }) {
   return <motion.span>{rounded}</motion.span>
 }
 
-// Использование:
-<AnimatedNumber value={12_450} />  // → анимирует от 0 до 12,450
+// Usage:
+<AnimatedNumber value={12_450} />  // → animates from 0 to 12,450
 ```
 
 ---
 
-## Паттерн 6 — Layout Animations (автоматические)
+## Pattern 6 — Layout Animations (automatic)
 
 ```tsx
-// framer-motion автоматически анимирует изменения layout:
-// Просто добавь layout prop — и перемещение элементов станет плавным
+// framer-motion automatically animates layout changes:
+// Just add the layout prop — and element movement becomes smooth
 
 <motion.div layout className="grid grid-cols-3 gap-4">
   {items.map(item => (
@@ -199,7 +205,7 @@ function AnimatedNumber({ value }: { value: number }) {
   ))}
 </motion.div>
 
-// При добавлении/удалении элементов — AnimatePresence:
+// When adding/removing elements — AnimatePresence:
 <AnimatePresence>
   {items.map(item => (
     <motion.div
@@ -215,36 +221,36 @@ function AnimatedNumber({ value }: { value: number }) {
 
 ---
 
-## Правила хорошей анимации
+## Rules for good animation
 
 ```
-ДЕЛАЙ:
-✓ duration 150–350ms для UI элементов
-✓ spring для физических объектов (карточки, кнопки)
-✓ tween/ease для фоновых элементов (overlay, page)
-✓ stagger для списков — создаёт нарратив
-✓ reducedMotion — всегда!
+DO:
+✓ duration 150–350ms for UI elements
+✓ spring for physical objects (cards, buttons)
+✓ tween/ease for background elements (overlay, page)
+✓ stagger for lists — creates narrative
+✓ reducedMotion — always!
 
-НЕ ДЕЛАЙ:
-✗ duration > 500ms для элементов управления
-✗ bounce на системных диалогах — раздражает
-✗ анимировать width/height напрямую — используй scale
-✗ анимировать layout без AnimatePresence на exit
+DON'T:
+✗ duration > 500ms for controls
+✗ bounce on system dialogs — annoying
+✗ animate width/height directly — use scale
+✗ animate layout without AnimatePresence on exit
 ```
 
-### Обязательно: reduced motion
+### Required: reduced motion
 
 ```tsx
 // src/hooks/useReducedMotion.ts
 import { useReducedMotion as useFramerReducedMotion } from 'framer-motion'
 
-// В компонентах:
+// In components:
 const shouldReduceMotion = useReducedMotion()
 const variants = shouldReduceMotion
-  ? { hidden: { opacity: 0 }, show: { opacity: 1 } }  // только fade
+  ? { hidden: { opacity: 0 }, show: { opacity: 1 } }  // fade only
   : fullAnimationVariants
 
-// Глобально в CSS:
+// Globally in CSS:
 // @media (prefers-reduced-motion: reduce) {
 //   * { animation-duration: 0.01ms !important; }
 // }
@@ -252,22 +258,22 @@ const variants = shouldReduceMotion
 
 ---
 
-## Чеклист
+## Checklist
 
 ```
-[ ] Page transitions работают при навигации
-[ ] Списки используют stagger при первом рендере
-[ ] Карточки имеют hover state (хотя бы y: -2)
-[ ] Кнопки имеют whileTap scale
-[ ] Модальные окна анимированы (не просто appear)
-[ ] reducedMotion учтён
-[ ] Числа в KPI-карточках анимированы
+[ ] Page transitions work during navigation
+[ ] Lists use stagger on first render
+[ ] Cards have hover state (at least y: -2)
+[ ] Buttons have whileTap scale
+[ ] Modals are animated (not just appear)
+[ ] reducedMotion respected
+[ ] Numbers in KPI cards are animated
 ```
 
 ## Known pitfalls
-- AnimatePresence должен быть СНАРУЖИ от условного рендера
-- `layout` prop конфликтует с некоторыми CSS Grid настройками
-- spring анимации не имеют фиксированной duration — нельзя синхронизировать с CSS
+- AnimatePresence must be OUTSIDE of conditional rendering
+- `layout` prop conflicts with some CSS Grid settings
+- spring animations don't have a fixed duration — can't sync with CSS
 
 ## Evolution log
-- v1.0: базовый шаблон из bootstrap
+- v1.0: initial template from bootstrap

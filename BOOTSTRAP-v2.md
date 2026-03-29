@@ -1,88 +1,96 @@
 <!-- TRIGGER: If user says "bootstrap" or "start" or "init" — execute this protocol -->
 # BOOTSTRAP — Project Initialization Protocol
-> **Это мета-инструкция для Claude Code. Не удалять. Читать первым делом при старте проекта.**
+> **This is a meta-instruction for Claude Code. Do not delete. Read first when starting a project.**
 
 ---
 
-## ⚡ Первый шаг — Определи путь
+## ⚡ First Step — Determine the Path
 
-Прежде чем что-либо делать — проверь наличие `TZ.md` в корне проекта.
+Before doing anything — check for `TZ.md` in the project root.
 
 ```
-ЕСЛИ TZ.md существует и содержит описание проекта:
-  → Переходи к Шагу 1 (Анализ TZ)
-  
-ЕСЛИ TZ.md не найден или пустой:
-  → Запусти Skill: Idea Discovery (см. ниже)
-  → После генерации TZ.md — возвращайся к Шагу 1
+IF TZ.md exists and contains a project description:
+  → Go to Step 1 (Analyze TZ)
+
+IF TZ.md is not found or empty:
+  → Launch Skill: Idea Discovery (see below)
+  → After TZ.md is generated — return to Step 1
 ```
 
 ---
 
-## 🧭 PATH B — Нет ТЗ? Запусти Discovery
+## 🧭 PATH B — No Spec? Launch Discovery
 
-Если TZ.md не найден — скажи пользователю:
+If TZ.md is not found — tell the user:
 
 ```
-TZ.md не найден. Это нормально — я помогу его создать.
+TZ.md not found. That's fine — I'll help you create it.
 
-Расскажи мне о своей идее — можно как угодно:
-одним предложением, потоком сознания, с примерами.
-Не думай о структуре — это моя работа.
+Tell me about your idea — however you like:
+one sentence, stream of consciousness, with examples.
+Don't worry about structure — that's my job.
 ```
 
-Затем следуй протоколу из `.claude/skills/idea-discovery.md`.
-После того как TZ.md создан — продолжай как PATH A.
+Then follow the protocol from `.claude/skills/idea-discovery/SKILL.md`.
+After TZ.md is created — continue as PATH A.
 
 ---
 
-## 📋 Шаг 1 — Анализ TZ.md (PATH A)
+## 📋 Step 1 — Analyze TZ.md (PATH A)
 
-Прочитай `TZ.md` полностью и определи:
+Read `TZ.md` fully and determine:
 
-### Тип проекта
-- `web-app` — веб-приложение / SPA
-- `crm` — CRM / управление данными
-- `ecommerce` — интернет-магазин / маркетплейс
-- `dashboard` — аналитика / дашборды
-- `saas` — SaaS инструмент / платформа
-- `landing` — лендинг / маркетинг
-- `api` — backend API / сервис
-- `fullstack` — полный стек
+> **Note:** The TZ should follow the structure defined in `.claude/skills/TZ-template/SKILL.md`.
+> If the user-provided TZ deviates, map it to this structure before proceeding.
 
-### Стек (из TZ или выбери оптимальный)
-Если стек не указан — выбери подходящий и укажи почему.
+### Project Type
+- `web-app` — web application / SPA
+- `crm` — CRM / data management
+- `ecommerce` — online store / marketplace
+- `dashboard` — analytics / dashboards
+- `saas` — SaaS tool / platform
+- `landing` — landing page / marketing
+- `api` — backend API / service
+- `fullstack` — full stack
+
+### Stack (from TZ or choose optimal)
+If stack is not specified — choose the best fit and explain why.
 
 **Frontend:**
 - React + TypeScript + Vite (SPA)
-- Next.js (нужен SSR, SEO или API routes)
-- Vue 3 + TypeScript (если явно в ТЗ)
+- Next.js (needs SSR, SEO, or API routes)
+- Vue 3 + TypeScript (if explicitly in TZ)
 
 **UI:**
-- Tailwind CSS v4 (всегда)
+- Tailwind CSS v4 (always)
 - shadcn/ui (CRM, dashboard, admin, SaaS)
-- Headless UI (кастомный дизайн без готовых компонентов)
+- Headless UI (custom design without pre-built components)
 
-**Стейт + данные:**
-- Zustand (UI-стейт)
-- TanStack Query (серверные данные)
+**State + Data:**
+- Zustand (UI state)
+- TanStack Query (server data)
 
-**Формы:** react-hook-form + zod
+**Forms:** react-hook-form + zod
 
-**По типу проекта:**
+**Routing:**
+- React Router v7 (default for Vite SPAs — mature, well-documented)
+- TanStack Router (type-safe routing, if project is heavily TypeScript-first)
+- Next.js built-in routing (if Next.js is chosen)
+
+**By project type:**
 - CRM/Dashboard: recharts, @tanstack/react-table, @dnd-kit/core
-- С картами: react-leaflet
-- С анимациями: framer-motion (всегда)
+- With maps: react-leaflet
+- With animations: framer-motion (always)
 - E-commerce: stripe-js, @stripe/react-stripe-js
 
-### Модули проекта
-Список из TZ — каждый модуль = отдельный субагент позже.
+### Project Modules
+List from TZ — each module = a separate subagent later.
 
 ---
 
-## 🏗️ Шаг 2 — Создай структуру проекта
+## 🏗️ Step 2 — Create Project Structure
 
-### 2.1 Инициализация
+### 2.1 Initialization
 
 ```bash
 # React + Vite:
@@ -91,25 +99,30 @@ npm create vite@latest . -- --template react-ts && npm install
 # Tailwind CSS v4:
 npm install tailwindcss @tailwindcss/vite
 
-# Базовые зависимости:
+# Core dependencies:
 npm install zustand @tanstack/react-query react-hook-form zod @hookform/resolvers
 npm install lucide-react framer-motion sonner
 npm install -D @types/node
 
-# shadcn/ui (для CRM / dashboard / SaaS):
+# Router (choose one based on Step 1):
+npm install react-router        # React Router v7
+# OR
+npm install @tanstack/react-router  # TanStack Router
+
+# shadcn/ui (for CRM / dashboard / SaaS):
 npx shadcn@latest init
 
-# Шрифты (выбери под проект):
+# Fonts (choose for the project):
 npm install @fontsource-variable/plus-jakarta-sans
 npm install @fontsource-variable/dm-sans
 npm install @fontsource/jetbrains-mono
 ```
 
-### 2.2 Структура src/
+### 2.2 src/ Structure
 
 ```
 src/
-├── features/           ← один модуль из TZ = одна папка
+├── features/           ← one TZ module = one folder
 │   ├── [module-1]/
 │   │   ├── index.tsx
 │   │   ├── components/
@@ -117,52 +130,53 @@ src/
 │   │   └── types.ts
 │   └── [module-N]/
 ├── components/
-│   ├── ui/             ← shadcn + базовые компоненты
-│   └── shared/         ← переиспользуемые в проекте
+│   ├── ui/             ← shadcn + base components
+│   └── shared/         ← reusable across project
 ├── design-system/
-│   ├── tokens.ts       ← цвета, типографика, spacing
-│   └── theme.css       ← CSS переменные
+│   ├── tokens.ts       ← colors, typography, spacing
+│   └── theme.css       ← CSS variables
 ├── api/
-│   ├── client.ts       ← axios / fetch конфиг
-│   └── [module].ts     ← по файлу на каждый модуль
+│   ├── client.ts       ← axios / fetch config
+│   └── [module].ts     ← one file per module
 ├── stores/             ← zustand stores
-├── hooks/              ← глобальные хуки
-├── types/              ← глобальные типы
+├── hooks/              ← global hooks
+├── types/              ← global types
 ├── utils/
 │   └── cn.ts           ← classnames utility
 ├── router/
-│   └── index.tsx
+│   └── index.tsx       ← route definitions (React Router or TanStack Router)
 └── main.tsx
 ```
 
 ---
 
-## 🤖 Шаг 3 — Создай агентную инфраструктуру
+## 🤖 Step 3 — Create Agent Infrastructure
 
-### 3.1 Структура .claude/
+### 3.1 .claude/ Structure
 
 ```
 .claude/
-├── CLAUDE.md                    ← СОЗДАТЬ ПЕРВЫМ
+├── CLAUDE.md                    ← CREATE FIRST
+├── settings.json                ← hooks and permissions (see 3.6)
 ├── skills/
-│   ├── idea-discovery.md        ← всегда (Path B)
-│   ├── design-tokens.md         ← всегда
-│   ├── typography.md            ← всегда
-│   ├── frontend-design.md       ← всегда
-│   ├── layout-craft.md          ← всегда
-│   ├── ux-states.md             ← всегда
-│   ├── motion.md                ← всегда
-│   ├── ui-components.md         ← генерируется под проект
-│   ├── api-patterns.md          ← генерируется под проект
-│   ├── testing.md               ← генерируется под проект
-│   └── [domain].md              ← crm / ecommerce / saas / etc
+│   ├── idea-discovery/SKILL.md  ← always (Path B)
+│   ├── design-tokens/SKILL.md   ← always
+│   ├── typography/SKILL.md      ← always
+│   ├── frontend-design/SKILL.md ← always
+│   ├── layout-craft/SKILL.md    ← always
+│   ├── ux-states/SKILL.md       ← always
+│   ├── motion/SKILL.md          ← always
+│   ├── ui-components/SKILL.md   ← generate for project (see 3.4)
+│   ├── api-patterns/SKILL.md    ← generate for project (see 3.4)
+│   ├── testing/SKILL.md         ← generate for project (see 3.4)
+│   └── [domain]/SKILL.md        ← generate for project type (see 3.5)
 ├── agents/
-│   ├── orchestrator.md
-│   ├── [module]-agent.md        ← по одному на каждый модуль
-│   └── qa-agent.md
+│   ├── orchestrator.md          ← with YAML frontmatter
+│   ├── [module]-agent.md        ← one per module, with frontmatter
+│   └── qa-agent.md              ← quality assurance agent
 └── docs/
     ├── context/
-    │   └── current-context.md   ← обновлять каждую сессию
+    │   └── current-context.md   ← update every session
     ├── daily/
     ├── decisions/               ← ADR
     ├── errors/
@@ -171,118 +185,286 @@ src/
     └── milestones/
 ```
 
-### 3.2 CLAUDE.md — содержимое
+### 3.2 CLAUDE.md — Contents
 
 ```markdown
-# [Название проекта] — Claude Instructions
+# [Project Name] — Claude Instructions
 
-## Проект
-[Суть из TZ — 2-3 предложения]
+## Project
+[Summary from TZ — 2-3 sentences]
 
-## Стек
-[Полный стек с версиями]
+## Stack
+[Full stack with versions]
 
-## Модули
-[Список всех модулей из TZ]
+## Modules
+[List of all modules from TZ]
 
-## Правила разработки
-- Компоненты: функциональные, TypeScript, строгая типизация
-- Никогда не использовать `any`
-- Каждый модуль — изолированная папка features/[module]/
-- API-запросы только через src/api/
-- Формы только через react-hook-form + zod
-- Zustand для UI-стейта, TanStack Query для серверного
+## Development Rules
+- Components: functional, TypeScript, strict typing
+- Never use `any`
+- Each module — isolated folder features/[module]/
+- API requests only through src/api/
+- Forms only through react-hook-form + zod
+- Zustand for UI state, TanStack Query for server state
 
-## Дизайн — читать ПЕРЕД первым компонентом
-1. .claude/skills/design-tokens.md     ← палитра и шрифты
-2. .claude/skills/typography.md        ← иерархия текста
-3. .claude/skills/frontend-design.md  ← aesthetic direction
-4. .claude/skills/layout-craft.md     ← при каждом экране
-5. .claude/skills/ux-states.md        ← loading/empty/error
-6. .claude/skills/motion.md           ← после базовой структуры
+## Design — read BEFORE first component
+1. .claude/skills/design-tokens/     ← palette and fonts
+2. .claude/skills/typography/        ← text hierarchy
+3. .claude/skills/frontend-design/   ← aesthetic direction
+4. .claude/skills/layout-craft/      ← per screen
+5. .claude/skills/ux-states/         ← loading/empty/error
+6. .claude/skills/motion/            ← after base structure
 
-## Документация
-- Обновляй current-context.md после каждой сессии
-- ADR при архитектурных решениях
-- Логируй решённые ошибки в errors/solved/
+## Documentation
+- Update current-context.md after every session
+- ADR for architectural decisions
+- Log solved errors in errors/solved/
 ```
 
-### 3.3 Агенты
+### 3.3 Agents
 
 **orchestrator.md:**
 ```markdown
+---
+name: orchestrator
+description: Master agent that coordinates all module agents and maintains project consistency
+model: inherit
+memory: project
+skills:
+  - design-tokens
+  - typography
+  - frontend-design
+---
+
 # Orchestrator Agent
 
-## Протокол сессии
-1. Прочитать current-context.md
-2. Прочитать CLAUDE.md
-3. Уточнить задачу
-4. Запустить субагентов (параллельно для независимых модулей)
-5. Собрать результаты, проверить консистентность UI
-6. Обновить current-context.md
+## Session Protocol
+1. Read current-context.md
+2. Read CLAUDE.md
+3. Clarify the task
+4. Launch subagents (in parallel for independent modules)
+5. Collect results, verify UI consistency
+6. Update current-context.md
 
-## Правила параллелизации
-- Дизайн-система → всегда первая, блокирует остальных
-- Независимые модули → параллельно
-- Модуль с зависимостями → после зависимостей
+## Parallelization Rules
+- Design system → always first, blocks others
+- Independent modules → in parallel
+- Module with dependencies → after dependencies
 ```
 
-**Для каждого модуля из TZ:**
+**For each module from TZ:**
 ```markdown
+---
+name: [module]-agent
+description: Handles development of the [module] feature module
+model: inherit
+memory: project
+skills:
+  - ui-components
+  - ux-states
+  - [domain]
+---
+
 # Agent: [Module]
 
-## Ответственность
-[Что делает этот агент]
+## Responsibility
+[What this agent does]
 
-## Читать перед работой
-- .claude/skills/ui-components.md
-- .claude/skills/ux-states.md
-- .claude/skills/[domain].md
+## Read Before Working
+- .claude/skills/ui-components/
+- .claude/skills/ux-states/
+- .claude/skills/[domain]/
 
-## Входные данные
-- API: [эндпоинты из TZ]
-- Зависит от: [другие модули]
+## Input
+- API: [endpoints from TZ]
+- Depends on: [other modules]
 
-## Выходные данные
+## Output
 - src/features/[module]/
 - src/api/[module].ts
 
-## Критерии готовности
-[ ] Все компоненты типизированы
+## Done Criteria
+[ ] All components typed
 [ ] Loading / empty / error states
-[ ] API-хуки через TanStack Query
-[ ] Адаптивная вёрстка
-[ ] Hover states на интерактивных элементах
+[ ] API hooks via TanStack Query
+[ ] Responsive layout
+[ ] Hover states on interactive elements
 ```
+
+### 3.4 Project-Specific Skills — Generation Instructions
+
+After determining the stack and modules in Step 1, generate these skills based on the project:
+
+**ui-components/ (SKILL.md):**
+Generate based on the chosen UI framework. Include:
+- Component naming conventions and file structure
+- How to extend shadcn/ui components (if used)
+- Project-specific composite components (e.g., DataTable for CRM, ProductCard for e-commerce)
+- Prop patterns: prefer composition over configuration
+- When to create a shared component vs. feature-local component
+
+**api-patterns/ (SKILL.md):**
+Generate based on the data layer. Include:
+- API client setup (base URL, interceptors, auth headers)
+- TanStack Query hook patterns: queries, mutations, optimistic updates
+- Error handling strategy (toast on mutation fail, error boundary on query fail)
+- Type generation approach (manual types from TZ or auto-generated from OpenAPI)
+- Cache invalidation patterns per module
+
+**testing/ (SKILL.md):**
+Generate based on project type and complexity. Include:
+- Test runner choice (Vitest for Vite projects)
+- What to test: business logic in hooks, form validation schemas, API transforms
+- What NOT to test: pure UI rendering, third-party library internals
+- Testing patterns: arrange-act-assert, mock API with MSW
+- Minimum coverage targets per module
+
+### 3.5 Domain-Specific Skills — Generation by Project Type
+
+Generate ONE domain skill matching the project type from Step 1:
+
+**For CRM (`crm/SKILL.md`):**
+- Data table patterns (sorting, filtering, pagination, column visibility)
+- Form-heavy workflows (multi-step, draft saving, validation)
+- Entity relationship display (linked records, breadcrumbs)
+- Bulk operations (select all, batch update/delete)
+- Search and filter UX patterns
+
+**For E-commerce (`ecommerce/SKILL.md`):**
+- Product display patterns (grid, list, gallery, quick view)
+- Cart and checkout flow (state management, step validation)
+- Payment integration (Stripe Elements, error handling)
+- Inventory and pricing display (stock status, sale badges)
+- Category navigation and filtering
+
+**For Dashboard (`dashboard/SKILL.md`):**
+- Chart composition (recharts patterns, responsive containers)
+- KPI cards and metric display (trend indicators, sparklines)
+- Date range selection and data filtering
+- Real-time data updates (polling, WebSocket patterns)
+- Export functionality (CSV, PDF)
+
+**For SaaS (`saas/SKILL.md`):**
+- Multi-tenancy patterns (workspace switching, data isolation)
+- Subscription and billing UI (plan comparison, upgrade flows)
+- Settings and configuration pages
+- Onboarding flows (progressive disclosure, empty states with CTAs)
+- Role-based access display (show/hide based on permissions)
+
+**For Landing (`landing/SKILL.md`):**
+- Hero section patterns (split, centered, video background)
+- Social proof sections (testimonials, logos, stats)
+- CTA optimization (placement, urgency, contrast)
+- FAQ and feature comparison sections
+- Performance optimization (lazy images, above-the-fold priority)
+
+### 3.6 QA Agent
+
+```markdown
+---
+name: qa-agent
+description: Reviews completed modules for type safety, UX states coverage, responsive design, and design system compliance
+model: inherit
+memory: project
+skills:
+  - ux-states
+  - design-tokens
+  - frontend-design
+---
+
+# QA Agent
+
+## Review Checklist (per module)
+- [ ] All components use TypeScript strict mode, no `any`
+- [ ] All data-fetching states: loading (skeleton) / error / empty / success
+- [ ] Responsive: tested at 375px, 768px, 1280px
+- [ ] Design tokens used consistently (no hardcoded colors/spacing)
+- [ ] Interactive elements have hover/focus/active states
+- [ ] Accessibility: semantic HTML, alt texts, keyboard navigation
+- [ ] No console errors or warnings
+
+## How to Report
+Create a review file at `.claude/docs/reviews/[module]-review.md` with:
+- Issues found (severity: critical/major/minor)
+- Suggestions for improvement
+- Compliance score (0-100%)
+```
+
+### 3.7 Settings with Hooks
+
+Generate `.claude/settings.json` to enforce quality gates:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(npm run *)",
+      "Bash(npx *)",
+      "Bash(git *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx tsc --noEmit --pretty 2>&1 | head -20",
+            "timeout": 30000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Remember: update .claude/docs/context/current-context.md if this was a significant session'"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+> **Note:** Adapt hooks based on the project's linter/formatter setup.
+> Add `eslint`, `prettier`, or test commands as they become available.
 
 ---
 
-## 📝 Шаг 4 — Документация старта
+## 📝 Step 4 — Startup Documentation
 
-### current-context.md (начальная)
+### current-context.md (initial)
 
 ```markdown
 # Current Context
-Last updated: [дата]
+Last updated: [date]
 
-## Статус
-Фаза: Bootstrap / Init | Готовность: 0%
+## Status
+Phase: Bootstrap / Init | Readiness: 0%
 
-## Прогресс
-- [x] Bootstrap завершён
-- [x] TZ.md создан / существует
-- [ ] Дизайн-система (tokens + typography)
-- [ ] [Модуль 1]
-- [ ] [Модуль N]
+## Progress
+- [x] Bootstrap completed
+- [x] TZ.md created / exists
+- [ ] Design system (tokens + typography)
+- [ ] [Module 1]
+- [ ] [Module N]
 
-## Следующий шаг
-Создать дизайн-систему: tokens.ts + theme.css
+## Next Step
+Create design system: tokens.ts + theme.css
 
-## Открытые вопросы из TZ
-[Вопросы которые нужно уточнить]
+## Open Questions from TZ
+[Questions that need clarification]
 
-## Блокеры
-Нет
+## Blockers
+None
 ```
 
 ### M0-bootstrap.md
@@ -290,131 +472,131 @@ Last updated: [дата]
 ```markdown
 # Milestone 0 — Bootstrap ✅
 
-## Дата: [дата]
+## Date: [date]
 
-## Сделано
-- TZ.md: [создан через Discovery / предоставлен]
-- Стек: [итоговый выбор]
-- Структура создана
-- CLAUDE.md, скиллы, агенты готовы
-- Документация запущена
+## Done
+- TZ.md: [created via Discovery / provided]
+- Stack: [final choice]
+- Structure created
+- CLAUDE.md, skills, agents ready
+- Documentation launched
 
-## Следующий milestone
-M1 — Дизайн-система и Auth
+## Next Milestone
+M1 — Design System and Auth
 ```
 
 ---
 
-## ⚡ Шаг 5 — Финальная проверка
+## ⚡ Step 5 — Final Check
 
 ```
-[ ] TZ.md существует и заполнен
-[ ] Стек выбран и обоснован
-[ ] npm install прошёл без критических ошибок
-[ ] .claude/CLAUDE.md создан
-[ ] .claude/skills/ — все скиллы (дизайн + проектные)
-[ ] .claude/agents/ — оркестратор + модульные агенты
-[ ] .claude/docs/context/current-context.md создан
-[ ] .claude/docs/milestones/M0-bootstrap.md создан
-[ ] src/ структура создана
-[ ] README.md создан
+[ ] TZ.md exists and is filled
+[ ] Stack chosen and justified
+[ ] npm install completed without critical errors
+[ ] .claude/CLAUDE.md created
+[ ] .claude/skills/ — all skills (design + project-specific)
+[ ] .claude/agents/ — orchestrator + module agents
+[ ] .claude/docs/context/current-context.md created
+[ ] .claude/docs/milestones/M0-bootstrap.md created
+[ ] src/ structure created
+[ ] README.md created
 ```
 
-Если всё готово — скажи пользователю:
+If everything is ready — tell the user:
 ```
-Bootstrap завершён ✓
+Bootstrap complete ✓
 
-Проект: [название]
-Стек: [стек]
-Модули: [список]
+Project: [name]
+Stack: [stack]
+Modules: [list]
 
-Следующий шаг: [конкретная первая задача из TZ]
-Запустить сейчас?
+Next step: [specific first task from TZ]
+Start now?
 ```
 
 ---
 
-## 🔄 Протокол обновления скиллов
+## 🔄 Skill Update Protocol
 
-После каждого завершённого модуля:
-1. Что нового узнали о паттернах проекта?
-2. Какие ошибки были решены?
-3. Что добавить в запрещённое?
-4. Обновить версию скилла + evolution log
+After each completed module:
+1. What new patterns did we learn about this project?
+2. What errors were solved?
+3. What should be added to prohibited list?
+4. Update skill version + evolution log
 
-**Триггеры обновления:**
-- Завершён модуль
-- Решён нетривиальный баг → `errors/solved/ERR-NNN.md`
-- Архитектурное решение → `decisions/ADR-NNN.md`
-- Прошла неделя → `weekly/week-XX.md`
+**Update triggers:**
+- Module completed
+- Non-trivial bug solved → `errors/solved/ERR-NNN.md`
+- Architectural decision → `decisions/ADR-NNN.md`
+- Week passed → `weekly/week-XX.md`
 
 ---
 
-## 📐 Шаблоны документов
+## 📐 Document Templates
 
 ### ADR
-`.claude/docs/decisions/ADR-NNN-[название].md`
+`.claude/docs/decisions/ADR-NNN-[name].md`
 ```markdown
-# ADR-NNN: [Решение]
-## Статус: Accepted | Дата: [дата]
-## Контекст
-## Варианты рассмотрены
-## Решение и обоснование
-## Последствия
+# ADR-NNN: [Decision]
+## Status: Accepted | Date: [date]
+## Context
+## Options Considered
+## Decision and Rationale
+## Consequences
 ```
 
 ### Daily Log
 `.claude/docs/daily/YYYY-MM-DD.md`
 ```markdown
 # Daily — YYYY-MM-DD
-## Выполнено
-## Решения принятые сегодня
-## Ошибки и решения
-## Завтра
+## Completed
+## Decisions Made Today
+## Errors and Solutions
+## Tomorrow
 ```
 
 ### Error Encyclopedia
-`.claude/docs/errors/solved/ERR-NNN-[название].md`
+`.claude/docs/errors/solved/ERR-NNN-[name].md`
 ```markdown
-# ERR-NNN: [Ошибка]
-## Симптом
-## Причина
-## Решение (код/шаги)
-## Профилактика → добавить в скилл
+# ERR-NNN: [Error]
+## Symptom
+## Cause
+## Solution (code/steps)
+## Prevention → add to skill
 ```
 
 ---
 
-## 🎨 Дизайн-скиллы — порядок применения
+## 🎨 Design Skills — Application Order
 
 ```
-До первого компонента:
-  1. design-tokens.md   → палитра, шрифты, spacing
-  2. typography.md      → иерархия, детали
-  3. frontend-design.md → aesthetic direction
+Before first component:
+  1. design-tokens/   → palette, fonts, spacing
+  2. typography/       → hierarchy, details
+  3. frontend-design/  → aesthetic direction
 
-При каждом экране:
-  4. layout-craft.md    → hierarchy, grid, breathing room
-  5. ux-states.md       → loading / empty / error
+Per screen:
+  4. layout-craft/     → hierarchy, grid, breathing room
+  5. ux-states/        → loading / empty / error
 
-После базовой структуры:
-  6. motion.md          → transitions, micro-interactions
+After base structure:
+  6. motion/           → transitions, micro-interactions
 ```
 
-### Чеклист "не шаблон"
+### "Not a Template" Checklist
 ```
-[ ] Цвет: не дефолтный синий shadcn #3b82f6
-[ ] Шрифт: не только Inter
-[ ] Loading: нет голого <Spinner /> на уровне страницы
-[ ] Empty: не "No data found" без иконки и action
-[ ] Hover: каждая карточка реагирует
-[ ] Numbers: tabular-nums на статистике
-[ ] Page transitions: работают между роутами
+[ ] Color: not default shadcn blue #3b82f6
+[ ] Font: not only Inter
+[ ] Loading: no bare <Spinner /> at page level
+[ ] Empty: no "No data found" without icon and action
+[ ] Hover: every card reacts
+[ ] Numbers: tabular-nums on statistics
+[ ] Page transitions: work between routes
 [ ] Sticky header: backdrop-blur
-[ ] Dark mode: проверено на всех состояниях
+[ ] Dark mode: verified on all states
 ```
 
 ---
 
-> **Версия протокола:** 2.0 (добавлен Path B + Discovery Agent + полный TZ формат)
-> **Совместимость:** Claude Code, Claude Sonnet 4+
+> **Protocol version:** 2.0
+> **Compatibility:** Claude Code, Claude Sonnet 4+
